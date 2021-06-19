@@ -713,13 +713,14 @@ contract Adamant is Context, IERC20, Ownable {
     string private _symbol = "ADAMANT";
     uint8 private _decimals = 9;
     
-    uint256 public _taxFee = 5;
-    uint256 private _previousTaxFee = _taxFee;
     
     uint256 public _liquidityFee = 5;
     uint256 private _previousLiquidityFee = _liquidityFee;
 
-    uint256 public _burnFee = 2.5; // Burn Fee
+    uint256 public _holdersFee = _liquidityFee / 2;
+    uint256 private _previousTaxFee = _holdersFee;
+
+    uint256 public _burnFee = _liquidityFee / 2; // Burn Fee
     uint256 public _previousBurnFee = _burnFee;
 
 
@@ -894,7 +895,7 @@ contract Adamant is Context, IERC20, Ownable {
     }
     
     function setTaxFeePercent(uint256 taxFee) external onlyOwner() {
-        _taxFee = taxFee;
+        _holdersFee = taxFee;
     }
     
     function setLiquidityFeePercent(uint256 liquidityFee) external onlyOwner() {
@@ -976,7 +977,7 @@ contract Adamant is Context, IERC20, Ownable {
     }
     
     function calculateTaxFee(uint256 _amount) private view returns (uint256) {
-        return _amount.mul(_taxFee).div(
+        return _amount.mul(_holdersFee).div(
             10**2
         );
     }
@@ -996,17 +997,17 @@ contract Adamant is Context, IERC20, Ownable {
 
     
     function removeAllFee() private {
-        if(_taxFee == 0 && _liquidityFee == 0) return;
+        if(_holdersFee == 0 && _liquidityFee == 0) return;
         
-        _previousTaxFee = _taxFee;
+        _previousTaxFee = _holdersFee;
         _previousLiquidityFee = _liquidityFee;
         
-        _taxFee = 0;
+        _holdersFee = 0;
         _liquidityFee = 0;
     }
     
     function restoreAllFee() private {
-        _taxFee = _previousTaxFee;
+        _holdersFee = _previousTaxFee;
         _liquidityFee = _previousLiquidityFee;
     }
     
