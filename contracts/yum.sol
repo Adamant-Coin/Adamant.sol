@@ -1,15 +1,6 @@
-
 /**
-
-   #ADAMANT Coin features:
-   2.5% fee auto add to the liquidity pool    
-   2.5% fee to charity wallet
-   2.5% fee auto distribute to all holders
-   2.5% burn 
-   50% Supply is burned at start.
-   
-
- */
+ *Submitted for verification at BscScan.com on 2021-05-01
+*/
 
 pragma solidity ^0.6.12;
 // SPDX-License-Identifier: Unlicensed
@@ -691,7 +682,7 @@ interface IUniswapV2Router02 is IUniswapV2Router01 {
 }
 
 
-contract Adamant is Context, IERC20, Ownable {
+contract YUMMYToken is Context, IERC20, Ownable {
     using SafeMath for uint256;
     using Address for address;
 
@@ -705,37 +696,29 @@ contract Adamant is Context, IERC20, Ownable {
     address[] private _excluded;
    
     uint256 private constant MAX = ~uint256(0);
-    uint256 private _tTotal = 1000000000 * 10**6 * 10**9;
+    uint256 private _tTotal = 100000000000 * 10**1 * 10**9;
     uint256 private _rTotal = (MAX - (MAX % _tTotal));
     uint256 private _tFeeTotal;
 
-    string private _name = "Adamant";
-    string private _symbol = "ADAMANT";
+    string private _name = "YUMMY";
+    string private _symbol = "YUMMY";
     uint8 private _decimals = 9;
     
+    uint256 public _taxFee = 3;
+    uint256 private _previousTaxFee = _taxFee;
     
-    uint256 public _liquidityFee = 5;
+    uint256 public _liquidityFee = 6;
     uint256 private _previousLiquidityFee = _liquidityFee;
-
-    uint256 public _holdersFee = _liquidityFee / 2;
-    uint256 private _previousTaxFee = _holdersFee;
-
-    uint256 public _burnFee = _liquidityFee / 2; // Burn Fee
-    uint256 public _previousBurnFee = _burnFee;
-
-
-    address payable public _devWalletAddress;
-
-    address BURN_ADDRESS = 0x0000000000000000000000000000000000000001;
 
     IUniswapV2Router02 public immutable uniswapV2Router;
     address public immutable uniswapV2Pair;
+    address payable public _charityWalletAddress;
     
     bool inSwapAndLiquify;
     bool public swapAndLiquifyEnabled = true;
     
-    uint256 public _maxTxAmount = 5000000 * 10**6 * 10**9;
-    uint256 private numTokensSellToAddToLiquidity = 500000 * 10**6 * 10**9;
+    uint256 public _maxTxAmount = 1000000000 * 10**1 * 10**9;
+    uint256 private numTokensSellToAddToLiquidity = 300000000 * 10**1 * 10**9;
     
     event MinTokensBeforeSwapUpdated(uint256 minTokensBeforeSwap);
     event SwapAndLiquifyEnabledUpdated(bool enabled);
@@ -744,8 +727,6 @@ contract Adamant is Context, IERC20, Ownable {
         uint256 ethReceived,
         uint256 tokensIntoLiqudity
     );
-
-    event TransferBurn(address indexed from, address indexed burnAddress, uint256 value);
     
     modifier lockTheSwap {
         inSwapAndLiquify = true;
@@ -753,11 +734,11 @@ contract Adamant is Context, IERC20, Ownable {
         inSwapAndLiquify = false;
     }
     
-    constructor () public {
-        _devWalletAddress = 0x4d45D12C7a95c0eBCE0620c491e76483ceEe4D31;
+    constructor (address payable charityWalletAddress) public {
+        _charityWalletAddress = charityWalletAddress;
         _rOwned[_msgSender()] = _rTotal;
         
-        IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(0xD99D1c33F9fC3444f8101754aBC46c52416550D1);
+        IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(0x10ED43C718714eb63d5aA57B78B54704E256024E);
          // Create a uniswap pair for this new token
         uniswapV2Pair = IUniswapV2Factory(_uniswapV2Router.factory())
             .createPair(address(this), _uniswapV2Router.WETH());
@@ -768,10 +749,6 @@ contract Adamant is Context, IERC20, Ownable {
         //exclude owner and this contract from fee
         _isExcludedFromFee[owner()] = true;
         _isExcludedFromFee[address(this)] = true;
-
-        // exclude BURN address frorm fee and reward
-        _isExcludedFromFee[BURN_ADDRESS] = true;
-        _isExcluded[BURN_ADDRESS] = true;
         
         emit Transfer(address(0), _msgSender(), _tTotal);
     }
@@ -838,7 +815,7 @@ contract Adamant is Context, IERC20, Ownable {
     function deliver(uint256 tAmount) public {
         address sender = _msgSender();
         require(!_isExcluded[sender], "Excluded addresses cannot call this function");
-        (uint256 rAmount,,,,,,) = _getValues(tAmount);
+        (uint256 rAmount,,,,,) = _getValues(tAmount);
         _rOwned[sender] = _rOwned[sender].sub(rAmount);
         _rTotal = _rTotal.sub(rAmount);
         _tFeeTotal = _tFeeTotal.add(tAmount);
@@ -847,10 +824,10 @@ contract Adamant is Context, IERC20, Ownable {
     function reflectionFromToken(uint256 tAmount, bool deductTransferFee) public view returns(uint256) {
         require(tAmount <= _tTotal, "Amount must be less than supply");
         if (!deductTransferFee) {
-            (uint256 rAmount,,,,,,) = _getValues(tAmount);
+            (uint256 rAmount,,,,,) = _getValues(tAmount);
             return rAmount;
         } else {
-            (,uint256 rTransferAmount,,,,,) = _getValues(tAmount);
+            (,uint256 rTransferAmount,,,,) = _getValues(tAmount);
             return rTransferAmount;
         }
     }
@@ -883,17 +860,14 @@ contract Adamant is Context, IERC20, Ownable {
             }
         }
     }
-        
-    function _transferBothExcluded(address sender, address recipient, uint256 tAmount) private {
-        (uint256 rAmount, uint256 rTransferAmount, uint256 rFee, uint256 tTransferAmount, uint256 tFee, uint256 tLiquidity, uint256 tBurn) = _getValues(tAmount);
+        function _transferBothExcluded(address sender, address recipient, uint256 tAmount) private {
+        (uint256 rAmount, uint256 rTransferAmount, uint256 rFee, uint256 tTransferAmount, uint256 tFee, uint256 tLiquidity) = _getValues(tAmount);
         _tOwned[sender] = _tOwned[sender].sub(tAmount);
         _rOwned[sender] = _rOwned[sender].sub(rAmount);
         _tOwned[recipient] = _tOwned[recipient].add(tTransferAmount);
-        _rOwned[recipient] = _rOwned[recipient].add(rTransferAmount);      
-        _transferBurn(tBurn);  
+        _rOwned[recipient] = _rOwned[recipient].add(rTransferAmount);        
         _takeLiquidity(tLiquidity);
-        _reflectHoldersFee(rFee, tFee);
-        emit TransferBurn(sender, BURN_ADDRESS, tBurn);
+        _reflectFee(rFee, tFee);
         emit Transfer(sender, recipient, tTransferAmount);
     }
     
@@ -905,8 +879,8 @@ contract Adamant is Context, IERC20, Ownable {
         _isExcludedFromFee[account] = false;
     }
     
-    function setHoldersFeePercent(uint256 holdersFee) external onlyOwner() {
-        _holdersFee = holdersFee;
+    function setTaxFeePercent(uint256 taxFee) external onlyOwner() {
+        _taxFee = taxFee;
     }
     
     function setLiquidityFeePercent(uint256 liquidityFee) external onlyOwner() {
@@ -923,44 +897,33 @@ contract Adamant is Context, IERC20, Ownable {
         swapAndLiquifyEnabled = _enabled;
         emit SwapAndLiquifyEnabledUpdated(_enabled);
     }
-
-    function sendBNBToCharity(uint256 amount) private { 
-        swapTokensForEth(amount); 
-        _devWalletAddress.transfer(address(this).balance); 
-    }
-    
-    function _setDevWallet(address payable devAddress) external onlyOwner() {
-        _devWalletAddress = devAddress;
-    }
     
      //to recieve ETH from uniswapV2Router when swaping
     receive() external payable {}
 
-    function _reflectHoldersFee(uint256 rFee, uint256 tFee) private {
+    function _reflectFee(uint256 rFee, uint256 tFee) private {
         _rTotal = _rTotal.sub(rFee);
         _tFeeTotal = _tFeeTotal.add(tFee);
     }
 
-    function _getValues(uint256 tAmount) private view returns (uint256, uint256, uint256, uint256, uint256, uint256, uint256) {
-        (uint256 tTransferAmount, uint256 tFee, uint256 tLiquidity, uint256 tBurn) = _getTValues(tAmount);
-        (uint256 rAmount, uint256 rTransferAmount, uint256 rFee) = _getRValues(tAmount, tFee, tBurn, tLiquidity, _getRate());
-        return (rAmount, rTransferAmount, rFee, tTransferAmount, tFee, tLiquidity, tBurn);
+    function _getValues(uint256 tAmount) private view returns (uint256, uint256, uint256, uint256, uint256, uint256) {
+        (uint256 tTransferAmount, uint256 tFee, uint256 tLiquidity) = _getTValues(tAmount);
+        (uint256 rAmount, uint256 rTransferAmount, uint256 rFee) = _getRValues(tAmount, tFee, tLiquidity, _getRate());
+        return (rAmount, rTransferAmount, rFee, tTransferAmount, tFee, tLiquidity);
     }
 
-    function _getTValues(uint256 tAmount) private view returns (uint256, uint256, uint256, uint256) {
+    function _getTValues(uint256 tAmount) private view returns (uint256, uint256, uint256) {
         uint256 tFee = calculateTaxFee(tAmount);
         uint256 tLiquidity = calculateLiquidityFee(tAmount);
-        uint256 tBurn = calculateBurnFee(tAmount);
-        uint256 tTransferAmount = tAmount.sub(tFee).sub(tLiquidity).sub(tBurn);
-        return (tTransferAmount, tFee, tLiquidity, tBurn);
+        uint256 tTransferAmount = tAmount.sub(tFee).sub(tLiquidity);
+        return (tTransferAmount, tFee, tLiquidity);
     }
 
-    function _getRValues(uint256 tAmount, uint256 tFee, uint256 tBurn, uint256 tLiquidity, uint256 currentRate) private pure returns (uint256, uint256, uint256) {
+    function _getRValues(uint256 tAmount, uint256 tFee, uint256 tLiquidity, uint256 currentRate) private pure returns (uint256, uint256, uint256) {
         uint256 rAmount = tAmount.mul(currentRate);
         uint256 rFee = tFee.mul(currentRate);
         uint256 rLiquidity = tLiquidity.mul(currentRate);
-        uint256 rBurn = tBurn.mul(currentRate);
-        uint256 rTransferAmount = rAmount.sub(rFee).sub(rLiquidity).sub(rBurn);
+        uint256 rTransferAmount = rAmount.sub(rFee).sub(rLiquidity);
         return (rAmount, rTransferAmount, rFee);
     }
 
@@ -990,7 +953,7 @@ contract Adamant is Context, IERC20, Ownable {
     }
     
     function calculateTaxFee(uint256 _amount) private view returns (uint256) {
-        return _amount.mul(_holdersFee).div(
+        return _amount.mul(_taxFee).div(
             10**2
         );
     }
@@ -1000,32 +963,33 @@ contract Adamant is Context, IERC20, Ownable {
             10**2
         );
     }
-
-    // calculate burn fee 2%
-    function calculateBurnFee(uint256 _amount) private view returns (uint256) {
-		return _amount.mul(_burnFee).div(
-			10**2
-		);
-	}
-
     
     function removeAllFee() private {
-        if(_holdersFee == 0 && _liquidityFee == 0) return;
+        if(_taxFee == 0 && _liquidityFee == 0) return;
         
-        _previousTaxFee = _holdersFee;
+        _previousTaxFee = _taxFee;
         _previousLiquidityFee = _liquidityFee;
         
-        _holdersFee = 0;
+        _taxFee = 0;
         _liquidityFee = 0;
     }
     
     function restoreAllFee() private {
-        _holdersFee = _previousTaxFee;
+        _taxFee = _previousTaxFee;
         _liquidityFee = _previousLiquidityFee;
     }
     
     function isExcludedFromFee(address account) public view returns(bool) {
         return _isExcludedFromFee[account];
+    }
+    
+    function sendBNBToCharity(uint256 amount) private { 
+        swapTokensForEth(amount); 
+        _charityWalletAddress.transfer(address(this).balance); 
+    }
+    
+    function _setCharityWallet(address payable charityWalletAddress) external onlyOwner() {
+        _charityWalletAddress = charityWalletAddress;
     }
 
     function _approve(address owner, address spender, uint256 amount) private {
@@ -1083,10 +1047,10 @@ contract Adamant is Context, IERC20, Ownable {
     }
 
     function swapAndLiquify(uint256 contractTokenBalance) private lockTheSwap {
-        // split the contract balance into halves
-        uint256 half = contractTokenBalance.div(2);
-        uint256 otherHalf = contractTokenBalance.sub(half);
-        uint256 halfOfOtherHalf = contractTokenBalance.sub(half).sub(otherHalf);
+        // split the contract balance into thirds
+        uint256 halfOfLiquify = contractTokenBalance.div(4);
+        uint256 otherHalfOfLiquify = contractTokenBalance.div(4);
+        uint256 portionForFees = contractTokenBalance.sub(halfOfLiquify).sub(otherHalfOfLiquify);
 
         // capture the contract's current ETH balance.
         // this is so that we can capture exactly the amount of ETH that the
@@ -1095,16 +1059,16 @@ contract Adamant is Context, IERC20, Ownable {
         uint256 initialBalance = address(this).balance;
 
         // swap tokens for ETH
-        swapTokensForEth(half); // <- this breaks the ETH -> HATE swap when swap+liquify is triggered
+        swapTokensForEth(halfOfLiquify); // <- this breaks the ETH -> HATE swap when swap+liquify is triggered
 
         // how much ETH did we just swap into?
         uint256 newBalance = address(this).balance.sub(initialBalance);
 
         // add liquidity to uniswap
-        addLiquidity(otherHalf, newBalance);
-        sendBNBToCharity(halfOfOtherHalf);
+        addLiquidity(otherHalfOfLiquify, newBalance);
+        sendBNBToCharity(portionForFees);
         
-        emit SwapAndLiquify(half, newBalance, otherHalf);
+        emit SwapAndLiquify(halfOfLiquify, newBalance, otherHalfOfLiquify);
     }
 
     function swapTokensForEth(uint256 tokenAmount) private {
@@ -1162,48 +1126,35 @@ contract Adamant is Context, IERC20, Ownable {
     }
 
     function _transferStandard(address sender, address recipient, uint256 tAmount) private {
-        (uint256 rAmount, uint256 rTransferAmount, uint256 rFee, uint256 tTransferAmount, uint256 tFee, uint256 tLiquidity, uint256 tBurn) = _getValues(tAmount);
+        (uint256 rAmount, uint256 rTransferAmount, uint256 rFee, uint256 tTransferAmount, uint256 tFee, uint256 tLiquidity) = _getValues(tAmount);
         _rOwned[sender] = _rOwned[sender].sub(rAmount);
         _rOwned[recipient] = _rOwned[recipient].add(rTransferAmount);
-        _transferBurn(tBurn);
         _takeLiquidity(tLiquidity);
-        _reflectHoldersFee(rFee, tFee);
-        emit TransferBurn(sender, BURN_ADDRESS, tBurn);
+        _reflectFee(rFee, tFee);
         emit Transfer(sender, recipient, tTransferAmount);
     }
 
     function _transferToExcluded(address sender, address recipient, uint256 tAmount) private {
-        (uint256 rAmount, uint256 rTransferAmount, uint256 rFee, uint256 tTransferAmount, uint256 tFee, uint256 tLiquidity,  uint256 tBurn) = _getValues(tAmount);
+        (uint256 rAmount, uint256 rTransferAmount, uint256 rFee, uint256 tTransferAmount, uint256 tFee, uint256 tLiquidity) = _getValues(tAmount);
         _rOwned[sender] = _rOwned[sender].sub(rAmount);
         _tOwned[recipient] = _tOwned[recipient].add(tTransferAmount);
-        _rOwned[recipient] = _rOwned[recipient].add(rTransferAmount);   
-        _transferBurn(tBurn);        
+        _rOwned[recipient] = _rOwned[recipient].add(rTransferAmount);           
         _takeLiquidity(tLiquidity);
-        _reflectHoldersFee(rFee, tFee);
-        emit TransferBurn(sender, BURN_ADDRESS, tBurn);
+        _reflectFee(rFee, tFee);
         emit Transfer(sender, recipient, tTransferAmount);
     }
 
     function _transferFromExcluded(address sender, address recipient, uint256 tAmount) private {
-        (uint256 rAmount, uint256 rTransferAmount, uint256 rFee, uint256 tTransferAmount, uint256 tFee, uint256 tLiquidity, uint256 tBurn) = _getValues(tAmount);
+        (uint256 rAmount, uint256 rTransferAmount, uint256 rFee, uint256 tTransferAmount, uint256 tFee, uint256 tLiquidity) = _getValues(tAmount);
         _tOwned[sender] = _tOwned[sender].sub(tAmount);
         _rOwned[sender] = _rOwned[sender].sub(rAmount);
-        _rOwned[recipient] = _rOwned[recipient].add(rTransferAmount); 
-        _transferBurn(tBurn);  
+        _rOwned[recipient] = _rOwned[recipient].add(rTransferAmount);   
         _takeLiquidity(tLiquidity);
-        _reflectHoldersFee(rFee, tFee);
-        emit TransferBurn(sender, BURN_ADDRESS, tBurn);
+        _reflectFee(rFee, tFee);
         emit Transfer(sender, recipient, tTransferAmount);
     }
 
-    // Transfer to burn wallet
-    function _transferBurn(uint256 tBurn) private {
-		uint256 currentRate = _getRate();
-		uint256 rBurn = tBurn.mul(currentRate);		
-		_rOwned[BURN_ADDRESS] = _rOwned[BURN_ADDRESS].add(rBurn);
-		if(_isExcluded[BURN_ADDRESS])
-			_tOwned[BURN_ADDRESS] = _tOwned[BURN_ADDRESS].add(tBurn);
-	}
+
     
 
 }
