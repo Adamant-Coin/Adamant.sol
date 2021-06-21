@@ -6,7 +6,6 @@
    2.5% fee to charity wallet
    2.5% fee auto distribute to all holders
    2.5% burn 
-   50% Supply is burned at start.
  */
 
 pragma solidity ^0.6.12;
