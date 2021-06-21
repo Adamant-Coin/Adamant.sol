@@ -7,8 +7,6 @@
    2.5% fee auto distribute to all holders
    2.5% burn 
    50% Supply is burned at start.
-   
-
  */
 
 pragma solidity ^0.6.12;
@@ -705,12 +703,12 @@ contract Adamant is Context, IERC20, Ownable {
     address[] private _excluded;
    
     uint256 private constant MAX = ~uint256(0);
-    uint256 private _tTotal = 1000000000 * 10**6 * 10**9;
+    uint256 private _tTotal = 1000000000 * 10**3 * 10**9;
     uint256 private _rTotal = (MAX - (MAX % _tTotal));
     uint256 private _tFeeTotal;
 
     string private _name = "Adamant";
-    string private _symbol = "ADAMANT";
+    string private _symbol = "ADM";
     uint8 private _decimals = 9;
     
     
