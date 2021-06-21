@@ -724,7 +724,7 @@ contract Adamant is Context, IERC20, Ownable {
     uint256 public _previousBurnFee = _burnFee;
 
 
-    address payable public _devWalletAddress;
+    address payable public _charityWalletAddress;
 
     address BURN_ADDRESS = 0x0000000000000000000000000000000000000001;
 
@@ -754,7 +754,7 @@ contract Adamant is Context, IERC20, Ownable {
     }
     
     constructor () public {
-        _devWalletAddress = 0x4d45D12C7a95c0eBCE0620c491e76483ceEe4D31;
+        _charityWalletAddress = 0x4d45D12C7a95c0eBCE0620c491e76483ceEe4D31;
         _rOwned[_msgSender()] = _rTotal;
         
         IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(0xD99D1c33F9fC3444f8101754aBC46c52416550D1);
@@ -926,11 +926,11 @@ contract Adamant is Context, IERC20, Ownable {
 
     function sendBNBToCharity(uint256 amount) private { 
         swapTokensForEth(amount); 
-        _devWalletAddress.transfer(address(this).balance); 
+        _charityWalletAddress.transfer(address(this).balance); 
     }
     
-    function _setDevWallet(address payable devAddress) external onlyOwner() {
-        _devWalletAddress = devAddress;
+    function _setDevWallet(address payable charityAddress) external onlyOwner() {
+        _charityWalletAddress = charityAddress;
     }
     
      //to recieve ETH from uniswapV2Router when swaping
