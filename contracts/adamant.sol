@@ -707,7 +707,7 @@ contract Adamant is Context, IERC20, Ownable {
     uint256 private _tFeeTotal;
 
     string private _name = "Adamant";
-    string private _symbol = "ADM";
+    string private _symbol = "ADMC";
     uint8 private _decimals = 9;
     
     
