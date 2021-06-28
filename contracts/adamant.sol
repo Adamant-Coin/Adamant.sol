@@ -8,76 +8,81 @@
    2.5% burn 
  */
 
-pragma solidity ^0.6.12;
+pragma solidity 0.8.0;
+
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol"; // Import Ownable from the OpenZeppelin Contracts library
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol"; // IERC20 Contract Library
+
 // SPDX-License-Identifier: Unlicensed
-interface IERC20 {
+// interface IERC20 {
 
-    function totalSupply() external view returns (uint256);
+//     function totalSupply() external view returns (uint256);
 
-    /**
-     * @dev Returns the amount of tokens owned by `account`.
-     */
-    function balanceOf(address account) external view returns (uint256);
+//     /**
+//      * @dev Returns the amount of tokens owned by `account`.
+//      */
+//     function balanceOf(address account) external view returns (uint256);
 
-    /**
-     * @dev Moves `amount` tokens from the caller's account to `recipient`.
-     *
-     * Returns a boolean value indicating whether the operation succeeded.
-     *
-     * Emits a {Transfer} event.
-     */
-    function transfer(address recipient, uint256 amount) external returns (bool);
+//     /**
+//      * @dev Moves `amount` tokens from the caller's account to `recipient`.
+//      *
+//      * Returns a boolean value indicating whether the operation succeeded.
+//      *
+//      * Emits a {Transfer} event.
+//      */
+//     function transfer(address recipient, uint256 amount) external returns (bool);
 
-    /**
-     * @dev Returns the remaining number of tokens that `spender` will be
-     * allowed to spend on behalf of `owner` through {transferFrom}. This is
-     * zero by default.
-     *
-     * This value changes when {approve} or {transferFrom} are called.
-     */
-    function allowance(address owner, address spender) external view returns (uint256);
+//     /**
+//      * @dev Returns the remaining number of tokens that `spender` will be
+//      * allowed to spend on behalf of `owner` through {transferFrom}. This is
+//      * zero by default.
+//      *
+//      * This value changes when {approve} or {transferFrom} are called.
+//      */
+//     function allowance(address owner, address spender) external view returns (uint256);
 
-    /**
-     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
-     *
-     * Returns a boolean value indicating whether the operation succeeded.
-     *
-     * IMPORTANT: Beware that changing an allowance with this method brings the risk
-     * that someone may use both the old and the new allowance by unfortunate
-     * transaction ordering. One possible solution to mitigate this race
-     * condition is to first reduce the spender's allowance to 0 and set the
-     * desired value afterwards:
-     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
-     *
-     * Emits an {Approval} event.
-     */
-    function approve(address spender, uint256 amount) external returns (bool);
+//     /**
+//      * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
+//      *
+//      * Returns a boolean value indicating whether the operation succeeded.
+//      *
+//      * IMPORTANT: Beware that changing an allowance with this method brings the risk
+//      * that someone may use both the old and the new allowance by unfortunate
+//      * transaction ordering. One possible solution to mitigate this race
+//      * condition is to first reduce the spender's allowance to 0 and set the
+//      * desired value afterwards:
+//      * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
+//      *
+//      * Emits an {Approval} event.
+//      */
+//     function approve(address spender, uint256 amount) external returns (bool);
 
-    /**
-     * @dev Moves `amount` tokens from `sender` to `recipient` using the
-     * allowance mechanism. `amount` is then deducted from the caller's
-     * allowance.
-     *
-     * Returns a boolean value indicating whether the operation succeeded.
-     *
-     * Emits a {Transfer} event.
-     */
-    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+//     /**
+//      * @dev Moves `amount` tokens from `sender` to `recipient` using the
+//      * allowance mechanism. `amount` is then deducted from the caller's
+//      * allowance.
+//      *
+//      * Returns a boolean value indicating whether the operation succeeded.
+//      *
+//      * Emits a {Transfer} event.
+//      */
+//     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
 
-    /**
-     * @dev Emitted when `value` tokens are moved from one account (`from`) to
-     * another (`to`).
-     *
-     * Note that `value` may be zero.
-     */
-    event Transfer(address indexed from, address indexed to, uint256 value);
+//     /**
+//      * @dev Emitted when `value` tokens are moved from one account (`from`) to
+//      * another (`to`).
+//      *
+//      * Note that `value` may be zero.
+//      */
+//     event Transfer(address indexed from, address indexed to, uint256 value);
 
-    /**
-     * @dev Emitted when the allowance of a `spender` for an `owner` is set by
-     * a call to {approve}. `value` is the new allowance.
-     */
-    event Approval(address indexed owner, address indexed spender, uint256 value);
-}
+//     /**
+//      * @dev Emitted when the allowance of a `spender` for an `owner` is set by
+//      * a call to {approve}. `value` is the new allowance.
+//      */
+//     event Approval(address indexed owner, address indexed spender, uint256 value);
+// }
 
 
 
@@ -238,16 +243,16 @@ library SafeMath {
     }
 }
 
-abstract contract Context {
-    function _msgSender() internal view virtual returns (address payable) {
-        return msg.sender;
-    }
+// abstract contract Context {
+//     function _msgSender() internal view virtual returns (address payable) {
+//         return msg.sender;
+//     }
 
-    function _msgData() internal view virtual returns (bytes memory) {
-        this; // silence state mutability warning without generating bytecode - see https://github.com/ethereum/solidity/issues/2691
-        return msg.data;
-    }
-}
+//     function _msgData() internal view virtual returns (bytes memory) {
+//         this; // silence state mutability warning without generating bytecode - see https://github.com/ethereum/solidity/issues/2691
+//         return msg.data;
+//     }
+// }
 
 
 /**
@@ -388,91 +393,91 @@ library Address {
     }
 }
 
-/**
- * @dev Contract module which provides a basic access control mechanism, where
- * there is an account (an owner) that can be granted exclusive access to
- * specific functions.
- *
- * By default, the owner account will be the one that deploys the contract. This
- * can later be changed with {transferOwnership}.
- *
- * This module is used through inheritance. It will make available the modifier
- * `onlyOwner`, which can be applied to your functions to restrict their use to
- * the owner.
- */
-contract Ownable is Context {
-    address private _owner;
-    address private _previousOwner;
-    uint256 private _lockTime;
+// /**
+//  * @dev Contract module which provides a basic access control mechanism, where
+//  * there is an account (an owner) that can be granted exclusive access to
+//  * specific functions.
+//  *
+//  * By default, the owner account will be the one that deploys the contract. This
+//  * can later be changed with {transferOwnership}.
+//  *
+//  * This module is used through inheritance. It will make available the modifier
+//  * `onlyOwner`, which can be applied to your functions to restrict their use to
+//  * the owner.
+//  */
+// contract Ownable is Context {
+//     address private _owner;
+//     address private _previousOwner;
+//     uint256 private _lockTime;
 
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+//     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 
-    /**
-     * @dev Initializes the contract setting the deployer as the initial owner.
-     */
-    constructor () internal {
-        address msgSender = _msgSender();
-        _owner = msgSender;
-        emit OwnershipTransferred(address(0), msgSender);
-    }
+//     /**
+//      * @dev Initializes the contract setting the deployer as the initial owner.
+//      */
+//     constructor () internal {
+//         address msgSender = _msgSender();
+//         _owner = msgSender;
+//         emit OwnershipTransferred(address(0), msgSender);
+//     }
 
-    /**
-     * @dev Returns the address of the current owner.
-     */
-    function owner() public view returns (address) {
-        return _owner;
-    }
+//     /**
+//      * @dev Returns the address of the current owner.
+//      */
+//     function owner() public view returns (address) {
+//         return _owner;
+//     }
 
-    /**
-     * @dev Throws if called by any account other than the owner.
-     */
-    modifier onlyOwner() {
-        require(_owner == _msgSender(), "Ownable: caller is not the owner");
-        _;
-    }
+//     /**
+//      * @dev Throws if called by any account other than the owner.
+//      */
+//     modifier onlyOwner() {
+//         require(_owner == _msgSender(), "Ownable: caller is not the owner");
+//         _;
+//     }
 
-     /**
-     * @dev Leaves the contract without owner. It will not be possible to call
-     * `onlyOwner` functions anymore. Can only be called by the current owner.
-     *
-     * NOTE: Renouncing ownership will leave the contract without an owner,
-     * thereby removing any functionality that is only available to the owner.
-     */
-    function renounceOwnership() public virtual onlyOwner {
-        emit OwnershipTransferred(_owner, address(0));
-        _owner = address(0);
-    }
+//      /**
+//      * @dev Leaves the contract without owner. It will not be possible to call
+//      * `onlyOwner` functions anymore. Can only be called by the current owner.
+//      *
+//      * NOTE: Renouncing ownership will leave the contract without an owner,
+//      * thereby removing any functionality that is only available to the owner.
+//      */
+//     function renounceOwnership() public virtual onlyOwner {
+//         emit OwnershipTransferred(_owner, address(0));
+//         _owner = address(0);
+//     }
 
-    /**
-     * @dev Transfers ownership of the contract to a new account (`newOwner`).
-     * Can only be called by the current owner.
-     */
-    function transferOwnership(address newOwner) public virtual onlyOwner {
-        require(newOwner != address(0), "Ownable: new owner is the zero address");
-        emit OwnershipTransferred(_owner, newOwner);
-        _owner = newOwner;
-    }
+//     /**
+//      * @dev Transfers ownership of the contract to a new account (`newOwner`).
+//      * Can only be called by the current owner.
+//      */
+//     function transferOwnership(address newOwner) public virtual onlyOwner {
+//         require(newOwner != address(0), "Ownable: new owner is the zero address");
+//         emit OwnershipTransferred(_owner, newOwner);
+//         _owner = newOwner;
+//     }
 
-    function geUnlockTime() public view returns (uint256) {
-        return _lockTime;
-    }
+//     function geUnlockTime() public view returns (uint256) {
+//         return _lockTime;
+//     }
 
-    //Locks the contract for owner for the amount of time provided
-    function lock(uint256 time) public virtual onlyOwner {
-        _previousOwner = _owner;
-        _owner = address(0);
-        _lockTime = now + time;
-        emit OwnershipTransferred(_owner, address(0));
-    }
+//     //Locks the contract for owner for the amount of time provided
+//     function lock(uint256 time) public virtual onlyOwner {
+//         _previousOwner = _owner;
+//         _owner = address(0);
+//         _lockTime = now + time;
+//         emit OwnershipTransferred(_owner, address(0));
+//     }
     
-    //Unlocks the contract for owner when _lockTime is exceeds
-    function unlock() public virtual {
-        require(_previousOwner == msg.sender, "You don't have permission to unlock");
-        require(now > _lockTime , "Contract is locked until 7 days");
-        emit OwnershipTransferred(_owner, _previousOwner);
-        _owner = _previousOwner;
-    }
-}
+//     //Unlocks the contract for owner when _lockTime is exceeds
+//     function unlock() public virtual {
+//         require(_previousOwner == msg.sender, "You don't have permission to unlock");
+//         require(now > _lockTime , "Contract is locked until 7 days");
+//         emit OwnershipTransferred(_owner, _previousOwner);
+//         _owner = _previousOwner;
+//     }
+// }
 
 // pragma solidity >=0.5.0;
 
@@ -688,7 +693,7 @@ interface IUniswapV2Router02 is IUniswapV2Router01 {
 }
 
 
-contract Adamant is Context, IERC20, Ownable {
+contract Adamant is Context, IERC20, Ownable, Initializable {
     using SafeMath for uint256;
     using Address for address;
 
@@ -725,8 +730,8 @@ contract Adamant is Context, IERC20, Ownable {
 
     address BURN_ADDRESS = 0x0000000000000000000000000000000000000001;
 
-    IUniswapV2Router02 public immutable uniswapV2Router;
-    address public immutable uniswapV2Pair;
+    IUniswapV2Router02 public uniswapV2Router;
+    address public uniswapV2Pair;
     
     bool inSwapAndLiquify;
     bool public swapAndLiquifyEnabled = true;
@@ -750,8 +755,8 @@ contract Adamant is Context, IERC20, Ownable {
         inSwapAndLiquify = false;
     }
     
-    constructor () public {
-        _charityWalletAddress = 0x4d45D12C7a95c0eBCE0620c491e76483ceEe4D31;
+    function initialize(address payable charityWalletAddress) public initializer {
+        _charityWalletAddress = charityWalletAddress;
         _rOwned[_msgSender()] = _rTotal;
         
         IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(0xD99D1c33F9fC3444f8101754aBC46c52416550D1);

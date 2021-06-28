@@ -1,3 +1,5 @@
+import { deployProxy } from '@openzeppelin/truffle-upgrades';
+
 const Adamant = artifacts.require("Adamant");
 
 /*
@@ -5,9 +7,9 @@ const Adamant = artifacts.require("Adamant");
  * Ethereum client
  * See docs: https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript
  */
-contract("Adamant", function (/* accounts */) {
-  it("should assert true", async function () {
-    await Adamant.deployed();
-    return assert.isTrue(true);
+contract("Adamant deployer", function (/* accounts */) {
+  it('deployment works', async () => {
+    const instance = await deployProxy(Adamant, [42]);
+    assert.equal(instance.address.toString(), '42');
   });
 });
