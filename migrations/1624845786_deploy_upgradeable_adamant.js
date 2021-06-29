@@ -1,9 +1,17 @@
 // migrations/1624845786_deploy_upgradeable_adamant.js
-import { deployProxy } from '@openzeppelin/truffle-upgrades';
+const { deployProxy } = require('@openzeppelin/truffle-upgrades');
 
 const Adamant = artifacts.require('Adamant');
 
-export default async function (deployer) {
-  const instance = await deployProxy(Adamant, [42], { deployer });
+module.exports = async function (deployer) {
+  const instance = await deployProxy(
+    Adamant, 
+    [
+      '0x518B646e4197BC002b1d5329C4F36D61aB415Ce2',
+      'Adamant',
+      'ADMC',
+      9,
+      5
+    ], { deployer });
   console.log('Deployed', instance.address);
 };

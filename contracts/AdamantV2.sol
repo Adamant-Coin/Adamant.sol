@@ -693,7 +693,7 @@ interface IUniswapV2Router02 is IUniswapV2Router01 {
     ) external;
 }
 
-contract Adamant is Initializable, ContextUpgradeable, IERC20, OwnableUpgradeable {
+contract AdamantV2 is Initializable, ContextUpgradeable, IERC20, OwnableUpgradeable {
     using SafeMath for uint256;
     using Address for address;
 
