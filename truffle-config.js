@@ -18,8 +18,7 @@
  *
  */
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
-// const infuraKey = "fj4jll3k.....";
+const HDWalletProvider = require('@truffle/hdwallet-provider');
 //
 // const fs = require('fs');
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
@@ -55,8 +54,33 @@ module.exports = {
       network_id: 97,       // Custom network
       gas: 10000000,           // Gas sent with each transaction (default: ~6700000)
       gasPrice: 20000000000,  // 20 gwei (in wei) (default: 100 gwei)
-      // from: 0x5AA9d0A955c845591485D8b220CDE9a250f05135,        // Account to send txs from (default: accounts[0])
       websocket: true        // Enable EventEmitter interface for web3 (default: false)
+    },
+
+    localBsc: {
+      host: "127.0.0.1", 
+      port: 8545,             // Custom port
+      network_id: 97,       // Custom network
+      gas: 10000000,           // Gas sent with each transaction (default: ~6700000)
+      gasPrice: 20000000000,  // 20 gwei (in wei) (default: 100 gwei)
+      provider: () => new HDWalletProvider({
+        mnemonic: {
+          phrase: "couch holiday option snow grace brick resemble cushion dune cigar blouse search"
+        },
+        providerOrUrl: "https://data-seed-prebsc-1-s1.binance.org:8545",
+        numberOfAddresses: 1,
+        shareNonce: true,
+        derivationPath: "m/44'/60'/0'/0/0"
+      }),
+      websocket: true        // Enable EventEmitter interface for web3 (default: false)
+    },
+
+    testnet: {
+      provider: () => new HDWalletProvider({mnemonic: '', providerOrUrl:`https://data-seed-prebsc-1-s1.binance.org:8545`}),
+      network_id: 97,
+      confirmations: 10,
+      timeoutBlocks: 200,
+      skipDryRun: true
     },
 
     // Useful for deploying to a public network.

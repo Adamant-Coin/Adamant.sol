@@ -1,0 +1,256 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0xc8b6Bf05C859aF7c7DFDc873df71bf3105B49A05",
+    "txHash": "0x5a488fc656bfe3b65bed8a40789d0b1ffa2b2e4992d7827223a6ec48d2920f0d"
+  },
+  "proxies": [
+    {
+      "address": "0x64e281E9128A9ecFaA8a5b2FCceF2Fa014521582",
+      "txHash": "0xc6a1fe13071a7c72247cccea2f13ee098a472aac80b09dd6dd2eef9dd3759a1c",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x945c74E5884277f3a28F81E83D97b817de51b0Aa",
+      "txHash": "0x484535f3748bc6c58f183418a356defec599de46f544e43eade733604ff58ed8",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "70f5453b6fe7724b40dc6c6f096b1edb426133f692903debbdb93c732acd9db6": {
+      "address": "0x2170EE58De9577d1839eDb34D3F6018EB9d42F59",
+      "txHash": "0x4399da39fa01df6a1ff8f529b0f9508a1a6dfed1f16b0844937f46e5e6ecda4b",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "../@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:23"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "../@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:28"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "../@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:31"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "../@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:20"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "../@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:74"
+          },
+          {
+            "contract": "Adamant",
+            "label": "_rOwned",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "Adamant.sol:700"
+          },
+          {
+            "contract": "Adamant",
+            "label": "_tOwned",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "Adamant.sol:701"
+          },
+          {
+            "contract": "Adamant",
+            "label": "_allowances",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))",
+            "src": "Adamant.sol:702"
+          },
+          {
+            "contract": "Adamant",
+            "label": "_isExcludedFromFee",
+            "type": "t_mapping(t_address,t_bool)",
+            "src": "Adamant.sol:704"
+          },
+          {
+            "contract": "Adamant",
+            "label": "_isExcluded",
+            "type": "t_mapping(t_address,t_bool)",
+            "src": "Adamant.sol:706"
+          },
+          {
+            "contract": "Adamant",
+            "label": "_excluded",
+            "type": "t_array(t_address)dyn_storage",
+            "src": "Adamant.sol:707"
+          },
+          {
+            "contract": "Adamant",
+            "label": "_tTotal",
+            "type": "t_uint256",
+            "src": "Adamant.sol:710"
+          },
+          {
+            "contract": "Adamant",
+            "label": "_rTotal",
+            "type": "t_uint256",
+            "src": "Adamant.sol:711"
+          },
+          {
+            "contract": "Adamant",
+            "label": "_tFeeTotal",
+            "type": "t_uint256",
+            "src": "Adamant.sol:712"
+          },
+          {
+            "contract": "Adamant",
+            "label": "_name",
+            "type": "t_string_storage",
+            "src": "Adamant.sol:714"
+          },
+          {
+            "contract": "Adamant",
+            "label": "_symbol",
+            "type": "t_string_storage",
+            "src": "Adamant.sol:715"
+          },
+          {
+            "contract": "Adamant",
+            "label": "_decimals",
+            "type": "t_uint8",
+            "src": "Adamant.sol:716"
+          },
+          {
+            "contract": "Adamant",
+            "label": "_liquidityFee",
+            "type": "t_uint256",
+            "src": "Adamant.sol:719"
+          },
+          {
+            "contract": "Adamant",
+            "label": "_previousLiquidityFee",
+            "type": "t_uint256",
+            "src": "Adamant.sol:720"
+          },
+          {
+            "contract": "Adamant",
+            "label": "_holdersFee",
+            "type": "t_uint256",
+            "src": "Adamant.sol:722"
+          },
+          {
+            "contract": "Adamant",
+            "label": "_previousTaxFee",
+            "type": "t_uint256",
+            "src": "Adamant.sol:723"
+          },
+          {
+            "contract": "Adamant",
+            "label": "_burnFee",
+            "type": "t_uint256",
+            "src": "Adamant.sol:725"
+          },
+          {
+            "contract": "Adamant",
+            "label": "_previousBurnFee",
+            "type": "t_uint256",
+            "src": "Adamant.sol:726"
+          },
+          {
+            "contract": "Adamant",
+            "label": "_charityWalletAddress",
+            "type": "t_address_payable",
+            "src": "Adamant.sol:729"
+          },
+          {
+            "contract": "Adamant",
+            "label": "BURN_ADDRESS",
+            "type": "t_address",
+            "src": "Adamant.sol:731"
+          },
+          {
+            "contract": "Adamant",
+            "label": "uniswapV2Router",
+            "type": "t_contract(IUniswapV2Router02)1093",
+            "src": "Adamant.sol:733"
+          },
+          {
+            "contract": "Adamant",
+            "label": "uniswapV2Pair",
+            "type": "t_address",
+            "src": "Adamant.sol:734"
+          },
+          {
+            "contract": "Adamant",
+            "label": "inSwapAndLiquify",
+            "type": "t_bool",
+            "src": "Adamant.sol:736"
+          },
+          {
+            "contract": "Adamant",
+            "label": "swapAndLiquifyEnabled",
+            "type": "t_bool",
+            "src": "Adamant.sol:737"
+          },
+          {
+            "contract": "Adamant",
+            "label": "_maxTxAmount",
+            "type": "t_uint256",
+            "src": "Adamant.sol:739"
+          },
+          {
+            "contract": "Adamant",
+            "label": "numTokensSellToAddToLiquidity",
+            "type": "t_uint256",
+            "src": "Adamant.sol:740"
+          }
+        ],
+        "types": {
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
+            "label": "mapping(address => mapping(address => uint256))"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]"
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_uint8": {
+            "label": "uint8"
+          },
+          "t_address_payable": {
+            "label": "address payable"
+          },
+          "t_contract(IUniswapV2Router02)1093": {
+            "label": "contract IUniswapV2Router02"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    }
+  }
+}
