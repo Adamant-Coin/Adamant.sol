@@ -774,7 +774,7 @@ contract Adamant is Initializable, ContextUpgradeable, IERC20, OwnableUpgradeabl
         _previousTaxFee = _holdersFee;
         _burnFee = _liquidityFee / 2;
         _previousBurnFee = _burnFee;
-        BURN_ADDRESS = 0x0000000000000000000000000000000000000001;
+        BURN_ADDRESS = 0x000000000000000000000000000000000000dEaD;
         swapAndLiquifyEnabled = true;
         _maxTxAmount = 5000000 * 10**6 * 10**9;
         numTokensSellToAddToLiquidity = 500000 * 10**6 * 10**9;
@@ -949,7 +949,7 @@ contract Adamant is Initializable, ContextUpgradeable, IERC20, OwnableUpgradeabl
     }
 
     function sendBNBToCharity(uint256 amount) private { 
-        swapTokensForEth(amount); 
+        swapTokensForBnB(amount); 
         _charityWalletAddress.transfer(address(this).balance); 
     }
     
@@ -1119,7 +1119,7 @@ contract Adamant is Initializable, ContextUpgradeable, IERC20, OwnableUpgradeabl
         uint256 initialBalance = address(this).balance;
 
         // swap tokens for ETH
-        swapTokensForEth(half); // <- this breaks the ETH -> HATE swap when swap+liquify is triggered
+        swapTokensForBnB(half); // <- this breaks the ETH -> HATE swap when swap+liquify is triggered
 
         // how much ETH did we just swap into?
         uint256 newBalance = address(this).balance.sub(initialBalance);
@@ -1131,7 +1131,7 @@ contract Adamant is Initializable, ContextUpgradeable, IERC20, OwnableUpgradeabl
         emit SwapAndLiquify(half, newBalance, otherHalf);
     }
 
-    function swapTokensForEth(uint256 tokenAmount) private {
+    function swapTokensForBnB(uint256 tokenAmount) private {
         // generate the uniswap pair path of token -> weth
         address[] memory path = new address[](2);
         path[0] = address(this);
