@@ -1,6 +1,10 @@
-const { deployProxy, admin } = require('@openzeppelin/truffle-upgrades');
-const { accounts , defaultSender} = require('@openzeppelin/test-environment');
-const [ owner ] = accounts;
+const { admin } = require('@openzeppelin/truffle-upgrades');
+const {
+  BN,           // Big Number support
+  constants,    // Common constants, like the zero address and largest integers
+  expectEvent,  // Assertions for emitted events
+  expectRevert, // Assertions for transactions that should fail
+} = require('@openzeppelin/test-helpers');
 
 const Adamant = artifacts.require("Adamant");
 
@@ -26,15 +30,32 @@ contract("Adamant Deployment", function () {
   it('should return balance ', async () => {
     const instance = await Adamant.deployed();
     const proxyAdmin = (await admin.getInstance()).address
-    console.log("🚀 ~ file: adamant.js ~ line 28 ~ it ~ proxyAdmin", proxyAdmin)
-    console.log("🚀 ~ file: adamant-deployment.test.js ~ line 4 ~ owner", owner)
-    console.log("🚀 ~ file: adamant-deployment.test.js ~ line 4 ~ defaultSender", defaultSender)
     const value = await instance.balanceOf(proxyAdmin);
 
-    const BN = web3.utils.fromWei(value)
-    console.log("🚀 ~ file: adamant.js ~ line 33 ~ it ~ realValue", BN)
+    const convertedValue = web3.utils.fromWei(value)
  
-    // assert.equal(value, 1000000000000);
+    assert.equal(convertedValue, 0);
+  });
+
+  it('Should return Total Supply ', async () => {
+    const instance = await Adamant.deployed();
+    const value = await instance.totalSupply();
+
+    const convertedValue = web3.utils.fromWei(value)
+ 
+    assert.equal(convertedValue, 1000);
+  });
+
+  it('Transfer should work', async () => {
+    const instance = await Adamant.deployed();
+    const value = await instance.transfer('0x54c965696745Aa8aD5e8655ea61F95f68d414711', 1);
+    await expectEvent.inTransaction(value.tx, instance, 'Transfer')
+  });
+
+  it('Burn Transfer should work', async () => {
+    const instance = await Adamant.deployed();
+    const value = await instance.transfer('0x54c965696745Aa8aD5e8655ea61F95f68d414711', 1);
+    await expectEvent.inTransaction(value.tx, instance, 'TransferBurn')
   });
 
 });

@@ -15,7 +15,4 @@ module.exports = async function (deployer) {
     ], { deployer });
 
   console.log('Deployed', instance.address);
-
-  const transferOwnership = await admin.getInstance().address;
-  console.log("🚀 ~ file: 1624845786_deploy_upgradeable_adamant.js ~ line 20 ~ transferOwnership", transferOwnership)
 };
