@@ -776,8 +776,8 @@ contract Adamant is Initializable, ContextUpgradeable, IERC20, OwnableUpgradeabl
         _previousBurnFee = _burnFee;
         BURN_ADDRESS = 0x000000000000000000000000000000000000dEaD;
         swapAndLiquifyEnabled = true;
-        _maxTxAmount = 5000000 * 10**6 * 10**9;
-        numTokensSellToAddToLiquidity = 500000 * 10**6 * 10**9;
+        _maxTxAmount = 5000000 * 10**3 * 10**9;
+        numTokensSellToAddToLiquidity = 500000 * 10**3 * 10**9;
 
         _rOwned[_msgSender()] = _rTotal;
         
