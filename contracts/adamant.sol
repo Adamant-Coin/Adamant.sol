@@ -1060,6 +1060,4 @@ contract Adamant is Initializable, ContextUpgradeable, IERC20, OwnableUpgradeabl
 		if(_isExcluded[BURN_ADDRESS])
 			_tOwned[BURN_ADDRESS] = _tOwned[BURN_ADDRESS].add(tBurn);
 	}
-    
-
 }
