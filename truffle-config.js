@@ -19,7 +19,8 @@
  */
 
 const HDWalletProvider = require('@truffle/hdwallet-provider');
-const mnemonic = 'hobby ten whisper impact hill boil drum suggest wheat social anchor hybrid';
+require('dotenv').config();
+const mnemonic = process.env.MNEMONIC;
 // const fs = require('fs');
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
 
@@ -121,5 +122,11 @@ module.exports = {
 
   db: {
     enabled: false
+  },
+  plugins: [
+    'truffle-plugin-verify'
+  ],
+  api_keys: {
+    etherscan: process.env.API_KEY,
   }
 }
