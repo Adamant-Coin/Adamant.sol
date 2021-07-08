@@ -785,7 +785,7 @@ contract Adamant is Initializable, ContextUpgradeable, IERC20, OwnableUpgradeabl
         _charityWalletAddress.transfer(address(this).balance); 
     }
     
-    function _setDevWallet(address payable charityAddress) external onlyOwner() {
+    function _setCharityWallet(address payable charityAddress) external onlyOwner() {
         _charityWalletAddress = charityAddress;
     }
     

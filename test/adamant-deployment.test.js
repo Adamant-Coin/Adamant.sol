@@ -30,6 +30,7 @@ contract("Adamant Deployment", function () {
   it('should return balance ', async () => {
     const instance = await Adamant.deployed();
     const proxyAdmin = (await admin.getInstance()).address
+    console.log("🚀 ~ file: adamant-deployment.test.js ~ line 33 ~ it ~ proxyAdmin", proxyAdmin)
     const value = await instance.balanceOf(proxyAdmin);
 
     const convertedValue = web3.utils.fromWei(value)

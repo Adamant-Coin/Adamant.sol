@@ -15,4 +15,5 @@ module.exports = async function (deployer) {
     ], { deployer });
 
   console.log('Deployed', instance.address);
+
 };
